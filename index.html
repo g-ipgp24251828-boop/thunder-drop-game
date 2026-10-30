@@ -1,57 +1,444 @@
 <!doctype html>
-<html lang="ms">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Thunder Drop — Tangkap Kata Kerja</title>
-<style>
-:root{--navy:#061126;--panel:#10244b;--cyan:#55efff;--yellow:#ffe76b;--pink:#ff55c8;--green:#70ffbb;--red:#ff6483}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;color:#f8fbff;font-family:system-ui,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 15% 0%,#174785,transparent 35%),radial-gradient(circle at 88% 15%,#572477,transparent 30%),linear-gradient(145deg,#040917,#101d42 65%,#080d20);overflow-x:hidden}
-button{font:inherit;cursor:pointer;border:0}.app{max-width:1250px;margin:auto;padding:16px}header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.brand{display:flex;align-items:center;gap:12px}.logo{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;font-size:29px;background:linear-gradient(135deg,var(--yellow),var(--pink));box-shadow:0 0 25px #ff55c866}h1{margin:0;font-size:clamp(1.45rem,4vw,2.35rem);line-height:1.05;text-transform:uppercase}h1 span{color:var(--yellow)}.subtitle{color:#bdd7ff;margin-top:6px;font-size:.9rem}.badge{border:1px solid #55efff66;background:#0b2048;padding:8px 12px;border-radius:99px;font-size:.82rem}.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px}.panel{border:1px solid #60cfff45;border-radius:22px;background:linear-gradient(150deg,#132653ee,#09152ff7);box-shadow:0 15px 40px #0005;overflow:hidden}.arena{padding:14px}.hud{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}.stats{display:flex;gap:7px;flex-wrap:wrap}.stat{padding:8px 10px;border-radius:12px;background:#07152e;border:1px solid #315c95;font-weight:850}.hearts{color:var(--red);letter-spacing:3px}.qbox{margin-top:12px;border-radius:16px;padding:14px 16px;text-align:center;background:linear-gradient(120deg,#12376b,#24194d);border:1px solid #4fe8ff80}.qtag{color:var(--cyan);font-weight:900;font-size:.75rem;letter-spacing:.15em}.question{font-size:clamp(1.15rem,3vw,1.8rem);font-weight:900;margin:8px 0 0;line-height:1.3}.subhint{color:#c3d9ff;font-size:.8rem;margin-top:6px}.playfield{height:min(57vh,560px);min-height:350px;position:relative;overflow:hidden;border-radius:17px;margin-top:12px;border:1px solid #3269a5;background:linear-gradient(#0a1d43d9,#080e22ef),radial-gradient(ellipse at 50% 0%,#235c9c,#071026 72%);isolation:isolate}
-.playfield:before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 94%,#48dcff22 95%),linear-gradient(90deg,transparent 94%,#48dcff15 95%);background-size:100% 35px,35px 100%;perspective:500px;transform:perspective(500px) rotateX(8deg) scale(1.1);transform-origin:bottom;z-index:-1}
-.drop{position:absolute;width:clamp(78px,10vw,112px);height:clamp(78px,10vw,112px);border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;background:radial-gradient(circle at 30% 22%,#fff9,#fff0 28%),linear-gradient(145deg,#1e75bd,#16356f);border:3px solid #70efff;box-shadow:0 0 0 4px #47dfff18,0 0 24px #30caff55,inset 0 -8px 18px #020a2d88;color:white;font-size:clamp(.78rem,1.5vw,1rem);font-weight:900;line-height:1.1;user-select:none;touch-action:none;transition:box-shadow .1s,border-color .1s}.playfield .drop:nth-of-type(1){background:radial-gradient(circle at 28% 20%,#ffffffaa,transparent 30%),linear-gradient(145deg,#ff4f91,#9c236f 72%);border-color:#ff9ac8;box-shadow:0 0 0 4px #ff4f911c,0 0 27px #ff3c9c88,inset 0 -8px 18px #420a2d88;color:#fff}
-.playfield .drop:nth-of-type(2){background:radial-gradient(circle at 28% 20%,#ffffffaa,transparent 30%),linear-gradient(145deg,#25d9ff,#1450c5 72%);border-color:#8bf4ff;box-shadow:0 0 0 4px #25d9ff20,0 0 27px #25d9ff88,inset 0 -8px 18px #071c5488;color:#fff}
-.playfield .drop:nth-of-type(3){background:radial-gradient(circle at 28% 20%,#ffffffaa,transparent 30%),linear-gradient(145deg,#ffd84d,#e87516 72%);border-color:#fff0a1;box-shadow:0 0 0 4px #ffd84d20,0 0 27px #ffb52b88,inset 0 -8px 18px #54250788;color:#fff}
-.drop.target{border-color:var(--yellow);box-shadow:0 0 0 6px #ffe76b33,0 0 30px #ffe76b;transform:scale(1.08)}.drop.correct{background:radial-gradient(circle at 30% 22%,#fff9,#fff0 28%),linear-gradient(145deg,#1aaf78,#0d5a63);border-color:var(--green)}.drop.wrong{border-color:var(--red);box-shadow:0 0 25px #ff5575}.cursor{position:absolute;z-index:10;width:34px;height:34px;border:3px solid var(--yellow);border-radius:50%;box-shadow:0 0 0 7px #ffe76b33,0 0 22px #ffe76b;pointer-events:none;transform:translate(-50%,-50%);display:none}.cursor:after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--yellow)}.pop{position:absolute;z-index:9;pointer-events:none;font-size:clamp(2rem,5vw,4rem);animation:pop .7s ease-out forwards;filter:drop-shadow(0 0 15px #fff)}@keyframes pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.3)}100%{opacity:0;transform:translate(-50%,-90%) scale(1.8)}}.flash{position:absolute;inset:0;z-index:8;pointer-events:none;opacity:0;background:#a7ffff55}.flash.on{animation:flash .45s ease-out}@keyframes flash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}.side{padding:12px;display:flex;flex-direction:column;gap:12px}.camera{background:#07152e;border:1px solid #31558a;border-radius:15px;padding:10px}.camera h2,.instructions h2{font-size:1rem;margin:0 0 8px}.camframe{position:relative;aspect-ratio:4/3;background:#030711;border-radius:10px;overflow:hidden;border:1px solid #346aa4}video,canvas#camoverlay{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}canvas#camoverlay{pointer-events:none}.camstatus{font-size:.78rem;color:#bdd7ff;line-height:1.4;margin-top:7px}.instructions{background:#07152e;border:1px solid #31558a;border-radius:15px;padding:12px}.steps{display:grid;gap:10px}.step{display:flex;gap:9px;align-items:flex-start;font-size:.83rem;color:#d8e8ff;line-height:1.35}.emoji{width:32px;height:32px;display:grid;place-items:center;background:#18345f;border-radius:10px;flex-shrink:0;font-size:1.1rem}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btn{padding:10px 13px;border-radius:11px;font-weight:850}.primary{background:linear-gradient(100deg,var(--yellow),#ffae45);color:#081126;box-shadow:0 4px 0 #9b5c1f}.secondary{background:#18345f;border:1px solid #4c82ba;color:#f4fbff}.danger{background:#792343;color:#fff;border:1px solid #ff6483}.homebtn{background:linear-gradient(100deg,#ffe76b,#ffbd45);color:#07152d;border:1px solid #fff0a8;box-shadow:0 4px 0 #9b6b1b}.btn:disabled{opacity:.45;cursor:not-allowed}.feedback{min-height:44px;margin-top:10px;padding:10px 12px;border-radius:12px;background:#07152e;border:1px solid #284c7b;color:#d3e6ff;font-size:.9rem;line-height:1.4}.feedback.good{color:#b5ffda;border-color:#43f6a8;background:#073329}.feedback.bad{color:#ffc0d0;border-color:#ff6483;background:#351328}.tiny{font-size:.75rem;color:#9db9e3;line-height:1.4}footer{text-align:center;color:#8fa9d4;font-size:.76rem;padding:16px 0}.modal{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#020715dd;padding:18px}.modal.hidden{display:none}.card{max-width:560px;width:100%;padding:24px;border-radius:22px;border:1px solid #61dcff88;background:linear-gradient(145deg,#172b58,#0a1430);box-shadow:0 0 50px #248dff44}.card h2{margin-top:0}.card p{color:#d0e2ff;line-height:1.5}.actions{display:flex;gap:9px;flex-wrap:wrap}@media(max-width:900px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.playfield{height:55vh}}@media(max-width:560px){.app{padding:9px}.side{display:flex}.playfield{min-height:380px;height:54vh}.qbox{padding:12px}.arena{padding:10px}}
-</style>
-</head>
-<body>
-<div class="app">
-<header><div class="brand"><div class="logo">⚡</div><div><h1>Thunder Drop <span>— Tangkap!</span></h1><div class="subtitle">Misi 2 • Kenal pasti kata kerja aktif transitif dengan gerakan tangan</div></div></div><div class="badge">🫧 GERAK • SENTUH • JAWAB</div></header>
-<div class="layout"><main class="panel arena">
-<div class="hud"><div class="badge" id="round">SOALAN 1 / 6</div><div class="stats"><div class="stat">⭐ <span id="score">0</span></div><div class="stat">⏱ <span id="time">25</span>s</div><div class="stat hearts" id="lives">♥ ♥ ♥</div></div></div>
-<div class="qbox"><div class="qtag">CARI KATA KERJA AKTIF TRANSITIF</div><div class="question" id="question">Adik sedang ___ bola di padang.</div><div class="subhint">Sentuh bulatan jawapan yang betul dari jauh menggunakan hujung jari telunjuk.</div></div>
-<div class="playfield" id="playfield"><div class="flash" id="fieldflash"></div><div class="cursor" id="cursor"></div></div>
-<div class="controls"><button class="btn primary" id="camstart">📷 Aktifkan Webcam</button><button class="btn secondary" id="start">🚀 Mula / Sambung</button><button class="btn secondary" id="pause">⏸ Jeda</button><button class="btn danger" id="restart">↻ Mula Semula</button></div>
-<div class="feedback" id="feedback">Tekan “Mula / Sambung”. Webcam pilihan; permainan juga boleh dimainkan dengan klik atau sentuhan skrin.</div>
-</main><aside class="panel side"><section class="camera"><h2>📹 Pengesanan Gerakan</h2><div class="camframe"><video id="video" autoplay playsinline muted></video><canvas id="camoverlay"></canvas></div><div class="camstatus" id="camstatus">Webcam belum aktif.</div><p class="tiny">Pastikan tangan kelihatan penuh dan bergerak di hadapan kamera. Gunakan Chrome/Edge melalui HTTPS atau localhost.</p></section>
-<section class="instructions"><h2>🖐️ Cara Bermain</h2><div class="steps"><div class="step"><div class="emoji">☝️</div><div><b>1. Halakan jari</b><br>Gerakkan hujung jari telunjuk ke atas bulatan jawapan di kawasan permainan.</div></div><div class="step"><div class="emoji">✋</div><div><b>2. Sentuh dari jauh</b><br>Apabila bulatan diserlahkan, tahan hujung jari di situ seketika untuk memilih.</div></div><div class="step"><div class="emoji">🫧</div><div><b>3. Lihat kesan</b><br>Jawapan betul meletup menjadi bubble/flash dan soalan seterusnya muncul.</div></div></div></section></aside></div>
-<footer>Thunder Drop • HTML, CSS, JavaScript + MediaPipe Hands CDN • Tiada aset luaran selain MediaPipe.</footer></div>
-<div class="modal" id="intro"><div class="card"><h2>🫧 Thunder Drop: Tangkap Kata Kerja!</h2><p>Enam bulatan jawapan akan jatuh dari atas skrin. Gunakan hujung jari telunjuk di hadapan webcam untuk menyentuh bulatan jawapan yang betul dari jauh.</p><p>Jawapan betul menghasilkan bubble/flash dan meneruskan soalan. Sasaran kejayaan: sekurang-kurangnya 5 daripada 6 soalan.</p><div class="actions"><button class="btn primary" id="begin">🚀 Mula Permainan</button><button class="btn secondary" id="begincam">📷 Aktifkan Webcam + Mula</button></div></div></div>
-<div class="modal hidden" id="result"><div class="card"><h2 id="resulttitle">Misi selesai!</h2><p id="resultmsg"></p><div class="actions"><button class="btn primary" id="again">↻ Main Lagi</button><button class="btn secondary" id="resultclose">Tutup</button><button class="btn homebtn" id="backtosite">🚀 Misi Seterusnya</button></div></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-<script>
-const DATA=[
-{d:"Mudah",q:"Adik sedang ___ bola di padang.",o:["berlari","menendang","cantik"],a:1,e:"Menendang ialah kata kerja aktif transitif; objeknya ialah bola."},
-{d:"Sederhana",q:"Ibu ___ nasi di dapur.",o:["memasak","lapar","tinggi"],a:0,e:"Memasak ialah kata kerja aktif transitif; objeknya ialah nasi."},
-{d:"Sederhana",q:"Amir ___ buku cerita.",o:["rajin","membaca","tidur"],a:1,e:"Membaca ialah kata kerja aktif transitif; objeknya ialah buku cerita."},
-{d:"Sederhana",q:"Kakak ___ baju yang kering.",o:["melipat","cantik","tersenyum"],a:0,e:"Melipat ialah kata kerja aktif transitif; objeknya ialah baju."},
-{d:"Cabaran",q:"Ayah ___ kereta pada hujung minggu.",o:["berehat","merah","mencuci"],a:2,e:"Mencuci ialah kata kerja aktif transitif; objeknya ialah kereta."},
-{d:"Cabaran",q:"Murid itu ___ sampah ke dalam tong.",o:["bersih","membuang","berdiri"],a:1,e:"Membuang ialah kata kerja aktif transitif; objeknya ialah sampah."}
-];
-const $=id=>document.getElementById(id);let idx=0,score=0,lives=3,time=25,active=false,paused=false,answered=false,tick=null,raf=null,videoStream=null,mpHands=null,camActive=false,selectSince=0,lastSelect=0,hand={x:-1,y:-1,seen:false},audioCtx=null;
-function beep(f=500,d=.1,type="sine",vol=.045){try{audioCtx ||= new(window.AudioContext||window.webkitAudioContext)();let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=f;g.gain.value=vol;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+d);o.stop(audioCtx.currentTime+d)}catch(e){}}
-function soundPop(){beep(500,.09,"sine");setTimeout(()=>beep(850,.13,"triangle"),45);setTimeout(()=>beep(1150,.18,"sine"),90)}
-function flash(x,y,emoji="🫧"){let field=$("playfield"),r=field.getBoundingClientRect(),p=document.createElement("div");p.className="pop";p.textContent=emoji;p.style.left=x+"px";p.style.top=y+"px";field.appendChild(p);setTimeout(()=>p.remove(),800);$("fieldflash").classList.remove("on");void $("fieldflash").offsetWidth;$("fieldflash").classList.add("on")}
-function updateHud(){$("round").textContent=`SOALAN ${Math.min(idx+1,6)} / 6`;$("score").textContent=score;$("time").textContent=time;$("lives").textContent=("♥ ").repeat(lives).trim()||"—"}
-function clearDrops(){document.querySelectorAll(".drop").forEach(x=>x.remove())}
-function setQuestion(){answered=false;time=25;selectSince=0;hand.seen=false;clearDrops();if(idx>=DATA.length){finish();return}let q=DATA[idx];$("question").textContent=q.q;$("round").textContent=`SOALAN ${idx+1} / 6`;spawnDrops(q);updateHud();$("feedback").className="feedback";$("feedback").textContent=`Soalan ${idx+1}: tangkap bulatan jawapan yang betul.`}
-function spawnDrops(q){let field=$("playfield"),w=field.clientWidth;let xs=[.18,.5,.82];for(let i=0;i<3;i++){let b=document.createElement("button");b.className="drop";b.textContent=q.o[i];b.dataset.index=i;b.dataset.fall="0";b.style.left=`calc(${xs[i]*100}% - 48px)`;b.style.top=`-${90+(i%2)*80}px`;b.addEventListener("click",()=>choose(i,b));field.appendChild(b)}}
-function start(){if(idx>=DATA.length){reset();return}active=true;paused=false;$("intro").classList.add("hidden");$("pause").textContent="⏸ Jeda";if(!tick)tick=setInterval(step,40);$("feedback").className="feedback";$("feedback").textContent="Permainan bermula! Gerakkan hujung jari ke bulatan jawapan yang betul.";beep(620,.12)}
-function step(){if(!active||paused||answered)return;time-=.04;if(time<=0){time=0;wrong("Masa tamat!");return}updateHud();document.querySelectorAll(".drop").forEach((b,i)=>{let fall=Number(b.dataset.fall)+.8;b.dataset.fall=fall;b.style.top=(-90+(fall*(.9+i*.12)))+"px";if(parseFloat(b.style.top)>$("playfield").clientHeight+20){b.dataset.fall="0";b.style.top="-100px"}});if(hand.seen){let f=$("playfield").getBoundingClientRect(),x=hand.x*f.width,y=hand.y*f.height;$("cursor").style.display="block";$("cursor").style.left=x+"px";$("cursor").style.top=y+"px";let el=document.elementFromPoint(f.left+x,f.top+y)?.closest(".drop");document.querySelectorAll(".drop").forEach(b=>b.classList.toggle("target",b===el));if(el){if(!selectSince)selectSince=Date.now();if(Date.now()-selectSince>750&&Date.now()-lastSelect>1000){lastSelect=Date.now();choose(Number(el.dataset.index),el)}}else selectSince=0}else{$("cursor").style.display="none";document.querySelectorAll(".drop").forEach(b=>b.classList.remove("target"))}}
-function choose(i,b){if(!active||paused||answered)return;answered=true;let q=DATA[idx],rect=b.getBoundingClientRect(),field=$("playfield").getBoundingClientRect(),x=rect.left-field.left+rect.width/2,y=rect.top-field.top+rect.height/2;if(i===q.a){score+=10;b.classList.add("correct");$("feedback").className="feedback good";$("feedback").textContent="BETUL! "+q.e;flash(x,y,"🫧⚡");soundPop()}else{lives=Math.max(0,lives-1);b.classList.add("wrong");$("feedback").className="feedback bad";$("feedback").textContent="Belum tepat. "+q.e;flash(x,y,"💥");beep(160,.2,"square",.06)}updateHud();active=false;setTimeout(()=>{idx++;if(lives<=0||idx>=DATA.length){finish()}else{setQuestion();active=true}},1250)}
-function wrong(msg){if(answered)return;answered=true;lives=Math.max(0,lives-1);active=false;$("feedback").className="feedback bad";$("feedback").textContent=msg+" Jawapan betul: "+DATA[idx].o[DATA[idx].a]+".";updateHud();beep(140,.22,"square",.06);setTimeout(()=>{idx++;if(lives<=0||idx>=DATA.length)finish();else{setQuestion();active=true}},1000)}
-function finish(){active=false;paused=false;clearDrops();$("cursor").style.display="none";$("resulttitle").textContent=score>=50?"🏆 Misi Berjaya!":"⚡ Cuba Lagi, Ejen Muda!";$("resultmsg").textContent=`Skor: ${score}/60 • Nyawa berbaki: ${lives}/3. ${score>=50?"Hebat! Awak berjaya mengenal pasti sekurang-kurangnya 5 kata kerja aktif transitif.":"Berlatih lagi dan cuba capai sekurang-kurangnya 50 mata."}`;$("result").classList.remove("hidden");}
-function reset(){clearInterval(tick);tick=null;idx=0;score=0;lives=3;time=25;active=false;paused=false;answered=false;$("result").classList.add("hidden");setQuestion();start()}
-async function startCamera(){try{if(!navigator.mediaDevices?.getUserMedia)throw Error("Browser tidak menyokong webcam. Gunakan Chrome/Edge melalui HTTPS atau localhost.");videoStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:640},height:{ideal:480}},audio:false});$("video").srcObject=videoStream;await $("video").play();if(!window.Hands)throw Error("MediaPipe tidak dapat dimuatkan. Semak internet.");mpHands=new Hands({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`});mpHands.setOptions({maxNumHands:1,modelComplexity:1,minDetectionConfidence:.6,minTrackingConfidence:.6});mpHands.onResults(res=>{let c=$("camoverlay"),ctx=c.getContext("2d"),v=$("video");c.width=v.videoWidth||640;c.height=v.videoHeight||480;ctx.clearRect(0,0,c.width,c.height);if(!res.multiHandLandmarks?.length){hand.seen=false;$("camstatus").textContent="Tangan tidak dikesan. Tunjukkan jari telunjuk di hadapan kamera.";return}let lm=res.multiHandLandmarks[0];ctx.fillStyle="#ffe76b";lm.forEach(p=>{ctx.beginPath();ctx.arc(p.x*c.width,p.y*c.height,3.5,0,Math.PI*2);ctx.fill()});hand.x=1-lm[8].x;hand.y=lm[8].y;hand.seen=true;$("camstatus").textContent="Tangan dikesan! Gerakkan hujung jari telunjuk ke bulatan dan tahan seketika."});camActive=true;async function loop(){if(!camActive)return;if($("video").readyState>=2){try{await mpHands.send({image:$("video")})}catch(e){console.warn(e)}}requestAnimationFrame(loop)}loop();$("camstart").textContent="✓ Webcam Aktif";$("camstart").disabled=true;$("camstatus").textContent="Webcam aktif. Gerakkan jari telunjuk ke bulatan dan tahan seketika.";beep(700,.1)}catch(e){$("camstatus").textContent="Webcam gagal: "+e.message;$("feedback").className="feedback bad";$("feedback").textContent="Webcam tidak dapat diaktifkan. Benarkan akses kamera dan gunakan HTTPS atau localhost."}}
-$("begin").onclick=()=>{$("intro").classList.add("hidden");setQuestion();start()};$("begincam").onclick=async()=>{$("intro").classList.add("hidden");setQuestion();await startCamera();start()};$("camstart").onclick=startCamera;$("start").onclick=start;$("pause").onclick=()=>{if(!active&&!paused)return;paused=!paused;active=!paused;$("pause").textContent=paused?"▶ Sambung":"⏸ Jeda";$("feedback").textContent=paused?"Permainan dijeda. Tekan Sambung untuk teruskan.":"Permainan disambung."};$("restart").onclick=reset;$("again").onclick=reset;$("resultclose").onclick=()=>$("result").classList.add("hidden");$("backtosite").onclick=()=>{window.location.href="https://sites.google.com/moe-dl.edu.my/arena-wira-kata-kerja/panduan/misi-khas/misi-2"};window.addEventListener("resize",()=>{if(active&&!answered){clearDrops();spawnDrops(DATA[idx])}});
-</script></body></html>
+<html lang="ms"><head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20261023-04-bec0c89","C":{"Abril Fatface":"YACgEZbkUVE,0","Albert Sans":"YAHO2HRfeh4,0","Alfa Slab One":"YACgEYS9sJU,0","Anton":"YACgEcYqQ-A,0","Archivo Black":"YACgEZulLoA,0","Archivo":"YAHO2-t-jNE,0","Arial":"YAGyDvJ_4Ts,0","Atkinson Hyperlegible":"YAFge7Z-F6s,0","Azeret Mono":"YAHO2EIdDP0,0","Baloo 2":"YAHO2IcQUcM,0","Bangers":"YAD5qTdjGKo,1","Barlow Condensed":"YAFdJljEuFc,0","Barlow Semi Condensed":"YAFdJu55qXI,0","Barlow":"YAFdJsyuOPM,1","Bebas Neue":"YACgESME5ew,0","Big Shoulders Display":"YAFdJs8L2aw,0","Bodoni Moda":"YAHO2C7VUJE,0","Bricolage Grotesque":"YAFyMcdwzpc,0","Cairo":"YAFdtXpDzlQ,0","Canva Sans":"YAFdJjTk5UU,1","Caprasimo":"YAHO2PYTkbo,0","Caveat":"YALBs2ploWQ,0","Cinzel":"YACgEeV8bIQ,0","Comic Neue":"YAHO2VMiyZo,0","Commissioner":"YAHO2RRI-KE,0","Cormorant Garamond":"YAFdJhX-538,0","Courier New":"YAGzXiGs0_8,0","Courier Prime":"YAD1aFjegN8,0","DM Mono":"YAHO2SGpw0w,0","DM Sans":"YAD1aU3sLnI,0","DM Serif Display":"YAD1aYG82rc,0","Familjen Grotesk":"YAHO2ZriIzU,0","Figtree":"YAHO2b-mV7A,0","Forum":"YACgEcnnqB4,0","Fraunces":"YAFdJpU7Kkk,0","Fredoka":"YACgEZml080,0","Gabarito":"YAHO2cD3JmI,0","Geist":"YAHO2SfKS30,0","Gentium Book Plus":"YAHO2b-adyU,0","Georgia":"YAGzXkO0pEM,0","Gloock":"YAHO2WVhd0Q,0","Golos Text":"YAHO2QlqAQk,0","Hanken Grotesk":"YAHO2VB9G0I,0","Helvetica":"YAFcf7zkXN0,0","Host Grotesk":"YAHO2VztvdY,0","IBM Plex Mono":"YAFdJkmvhGI,0","IBM Plex Sans":"YAFdJgT0SHI,0","Impact":"YAFcfnjI7Vk,0","Instrument Sans":"YAHO2bKyaSQ,0","Instrument Serif":"YAHFeOnZNEk,0","Inter":"YAFdJvSyp_k,3","Italiana":"YAHO2Toik_w,0","Jacques Francois":"YAHO2a5g66Q,0","JetBrains Mono":"YAFdJksXcAk,0","Josefin Sans":"YAFdJjvw9Ps,0","Jua":"YADK3-gZSDU,0","Kalam":"YAFdJrEg2ic,0","Karla":"YAHO2V2NSXM,0","Lato":"YAFdJuFCnaw,0","League Spartan":"YACgEcnJpjs,0","Libre Baskerville":"YACgEUFdPdA,0","Libre Caslon Display":"YAHO2XhLmt0,0","Libre Franklin":"YAFdJr3SNlU,1","Lobster":"YAD8SnSjSFI,0","Lora":"YACgEXvxf8Q,0","Manrope":"YAHO2b2feC4,0","Martian Mono":"YAHO2YhUMkk,0","Merriweather":"YACgEXvHxxs,0","Michroma":"YADK4IYX8vY,0","Montserrat":"YAFdtQi73Xs,0","Noto Sans JP":"YAFdJiHXlcI,0","Noto Sans KR":"YAGsojZj-RQ,0","Noto Sans SC":"YAHO2hDCDFM,0","Nunito Sans":"YAFdtQJYB9w,1","Nunito":"YAFdJoNRMmU,1","Old Standard TT":"YAHO2lhtDcg,0","Oleo Script":"YACgEQQ14jI,0","Onest":"YAHO2kaArOY,0","Open Sans":"YAFdJt8dAY0,1","Oswald":"YACgEQY10lw,0","Outfit":"YAHO2nVlg14,0","PT Serif":"YACgEcU7Qg4,0","Pacifico":"YADLjORQ1u4,0","Parisienne":"YACgERSYqTw,0","Playfair Display":"YAFdJhem5V8,1","Plus Jakarta Sans":"YAHO2gdhi18,0","Poppins":"YAFdJjbTu24,1","Press Start 2P":"YAFyGr-8pmQ,0","Public Sans":"YAFdJj8NdaU,1","Quicksand":"YAFdJpYtCxE,1","Raleway":"YAFdJhmxbVQ,1","Red Hat Display":"YAD1bzs0p0Y,0","Red Hat Text":"YAHO21kkNWg,0","Roboto Mono":"YAFdJkvp3-k,0","Roboto Slab":"YAFdJswIKAg,0","Rockwell":"YAFcfyVZnN0,0","Rubik":"YAFdJsMWVVc,0","Rye":"YACgEdQP21k,0","STIX Two Text":"YAHO2joycuk,0","Sarabun":"YAFdJssSnME,0","Schibsted Grotesk":"YAHO2sWydRk,0","Segoe UI":"YAHNdRD1Klw,0","Sniglet":"YACgEUJSCy8,0","Source Sans 3":"YAG4lO1Mj10,0","Space Grotesk":"YAHO2sjPCSM,0","Space Mono":"YADW1-vpsoc,0","Spectral":"YAHO2rVUHIM,0","Syne":"YAHML9oLRPc,0","Times New Roman":"YAGzXW3gftg,0","Trebuchet MS":"YAFcfrglpVA,0","Ubuntu":"YACgERDU--Q,0","Unbounded":"YAHO2rkdmWY,0","Varela Round":"YALBs2IK6rw,0","Verdana":"YAGzXTctYtQ,0","Work Sans":"YAGXhLOKv44,0","Yellowtail":"YACgEYG4kG4,0"}}');</script><script src="/_sdk/05db820ba1544614.telemetry_sdk.js" integrity="sha512-a7JzkQDDcioSXpM61nxTfeRW7PcxWQy5+BrhyeTFmQFsXJ+Gncm0y50u7fTA7qOPegFnRgqCfa0mGUOK1yjDWQ=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Battle Padanan: Misi 1</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&amp;family=Space+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root{--red:#ff354d;--white:#f5f8ff;--dim:#a9b8cd;--cyan:#7ce9ff}
+    *{box-sizing:border-box}
+    body{margin:0;width:100%;color:var(--white);font-family:'DM Sans',sans-serif}
+    button{cursor:pointer;font:inherit}
+    button:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+    [hidden]{display:none!important}
+    .arena{position:relative;width:100%;min-height:calc(100 * min(var(--vh, 1vh), 1vh));overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#25334d 0%,#101827 48%,#070b13 100%)}
+    .arena:before{content:"";position:absolute;inset:8% 0 23%;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0 11%,#f43d5a14 11.1% 11.3%),linear-gradient(90deg,#ff334014,transparent 38%,transparent 62%,#ff334018);border-top:1px solid #ffffff12}
+    .arena:after{content:"";position:absolute;left:-25%;right:-25%;bottom:-19%;height:47%;transform:perspective(400px) rotateX(55deg);transform-origin:top;background:repeating-linear-gradient(90deg,transparent 0 8%,#ffffff24 8.1% 8.25%),repeating-linear-gradient(0deg,#111923 0 38px,#5d67702e 39px 41px);box-shadow:0 -20px 95px #ff334922;pointer-events:none}
+    .frame{position:relative;z-index:2;width:100%;max-width:1500px;margin:auto;padding:clamp(14px,2vw,28px);display:flex;flex-direction:column;min-height:calc(100 * min(var(--vh, 1vh), 1vh))}
+    .topline,.hud{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .title{font-weight:800;letter-spacing:.035em;text-transform:uppercase;line-height:1.1;text-shadow:0 0 22px #ff354d88}
+    .eyebrow,.hud-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+    .sound{position:fixed;top:clamp(14px,2vw,28px);right:clamp(14px,2vw,28px);z-index:20;border:1px solid #ffffff55;background:#131f30;color:var(--white);padding:13px 18px;min-height:48px;border-radius:10px;font-weight:700;box-shadow:0 8px 24px #0008}
+    .hud{margin-top:15px;background:#0b1422e8;border:1px solid #ffffff2c;border-radius:14px;padding:12px 17px;box-shadow:0 12px 40px #0006}
+    .stat strong{display:block;font-family:'Space Mono',monospace;font-size:17px}
+    .hp-stat{flex:1;min-width:155px;max-width:270px}
+    .hp-track,.progress-track{height:12px;background:#ffffff20;border-radius:20px;overflow:hidden;margin-top:6px}
+    .hp-fill,.hero-fill{height:100%;width:100%;transition:width .75s cubic-bezier(.2,.8,.2,1)}
+    .hp-fill{background:linear-gradient(90deg,#ff3747,#ff9a76);box-shadow:0 0 18px #ff394e}
+    .hero-fill{background:linear-gradient(90deg,#39a9dc,#7ce9ff);box-shadow:0 0 18px #7ce9ff}
+    .progress-track{height:5px}.progress-fill{height:100%;width:0;background:var(--cyan);transition:width .5s}
+    .battlefield{position:relative;flex:1;min-height:clamp(220px,32vw,425px);display:flex;justify-content:space-between;align-items:end;padding:10px clamp(0px,6vw,90px) 0;isolation:isolate}
+    .portal{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(30vw,320px);aspect-ratio:1;border:2px solid #7ce9ff33;border-radius:50%;box-shadow:0 0 55px #7ce9ff25,inset 0 0 55px #ff354d21;background:radial-gradient(circle,transparent 30%,#7ce9ff0b 32%,transparent 65%);animation:portal 10s linear infinite;z-index:-1}
+    .fighter{position:relative;width:min(35%,420px);max-height:clamp(220px,34vw,440px);object-fit:contain;object-position:bottom;filter:drop-shadow(0 15px 22px #000b) drop-shadow(0 0 18px #ff345244);animation:float 3s ease-in-out infinite}
+    .monster{width:min(39%,460px);animation-delay:-1.5s}
+    .fighter.hit{animation:hit .5s ease}.fighter.attack{animation:attack .55s ease}.fighter.taunt{animation:taunt .55s ease}
+    .projectile{position:absolute;z-index:4;left:var(--from-x,30%);top:var(--from-y,48%);width:33px;height:12px;border-radius:100%;background:#fff;box-shadow:0 0 12px 5px #7ce9ff,0 0 37px 13px #ff354d;opacity:0;pointer-events:none}
+    .projectile.fire{animation:shot .47s ease-in forwards}
+    .projectile.combo{height:24px;width:53px;box-shadow:0 0 20px 9px white,0 0 65px 25px #ff354d}
+    .impact,.shield{position:absolute;z-index:5;left:var(--to-x,75%);top:var(--to-y,43%);transform:translate(-50%,-50%);opacity:0;pointer-events:none}
+    .impact{width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 0 45px 25px #ff354d,0 0 100px 60px #ff354d77}
+    .impact.burst{animation:burst .55s ease-out}
+    .shield{width:110px;height:140px;border:4px solid #7ce9ff;border-radius:50%;background:#7ce9ff25;box-shadow:0 0 32px #7ce9ff}
+    .shield.show{animation:shield .65s ease}
+    .particles{position:absolute;z-index:6;left:var(--to-x,75%);top:var(--to-y,43%);pointer-events:none}
+    .particle{position:absolute;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 12px #ff354d;animation:spark .55s ease-out forwards}
+    .damage{position:absolute;z-index:7;left:var(--to-x,75%);top:var(--to-y,43%);font-family:'Space Mono',monospace;font-weight:700;color:#fff;text-shadow:0 0 12px #ff354d,0 0 24px #ff354d;pointer-events:none;opacity:0;white-space:nowrap}
+    .damage.show{animation:damage .85s ease-out}
+    .arena.shake .frame{animation:shake .35s ease}
+    .arena.victory .portal{box-shadow:0 0 100px #7ce9ffaa,inset 0 0 80px #7ce9ff88}
+    .arena.victory .fighter{animation: victoryPose 1.1s ease-in-out infinite alternate}
+    .arena.victory .monster{animation: defeatPose 1.1s ease-in-out infinite alternate}
+    .arena.victory .modal{animation: victoryIn .7s cubic-bezier(.2,.9,.25,1);border-color:#7ce9ff;box-shadow:0 0 35px #7ce9ff88,0 0 110px #ff354d55}
+    .arena.victory .modal:before{content:"✦  ✧  ✦  ✧  ✦";display:block;color:#7ce9ff;letter-spacing:1.2em;font-size:20px;text-shadow:0 0 18px #7ce9ff;animation:neonSpark 1.2s ease-in-out infinite}
+    .next-button{border-color:#7ce9ff;background:linear-gradient(135deg,#16a5c7,#ff354d);box-shadow:0 0 22px #7ce9ff99,0 8px 30px #ff354d66}
+    .next-message{min-height:28px;color:#7ce9ff;font-weight:700;margin:15px 0 0}
+    @keyframes victoryPose{to{transform:translateY(-14px) rotate(-4deg) scale(1.06);filter:drop-shadow(0 0 28px #7ce9ff)}}
+    @keyframes defeatPose{to{transform:translateY(24px) rotate(10deg) scale(.92);filter:grayscale(.5) brightness(.7) drop-shadow(0 0 18px #ff354d)}}
+    @keyframes victoryIn{from{opacity:0;transform:translateY(35px) scale(.86)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes neonSpark{50%{opacity:.35;transform:scale(1.12)}}
+    .play-panel{background:linear-gradient(145deg,#101d2df5,#121723f5);border:1px solid #ffffff33;box-shadow:0 15px 55px #0009,0 0 30px #ff354d18;border-radius:20px;padding:clamp(15px,2vw,25px)}
+    .instruction{font-weight:800;margin:0 0 13px}
+    .cards,.words{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+    .picture-card{min-height:94px;border:1px solid #8ea3bd60;background:linear-gradient(145deg,#1a293b,#132337);color:white;border-radius:12px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s}.card-art{display:block;width:100%;height:clamp(58px,6vw,86px);object-fit:contain;border-radius:8px;filter:drop-shadow(0 7px 8px #0008);transition:transform .25s,filter .25s}.card-art-bola{object-fit:cover;object-position:22% 18%}.card-art-gambar{object-fit:cover;object-position:62% 18%}.picture-card:hover:not(:disabled) .card-art,.picture-card:focus-visible .card-art{transform:translateY(-3px) scale(1.04);filter:drop-shadow(0 0 10px #7ce9ff88) drop-shadow(0 7px 8px #0008)}
+    .picture-card:hover:not(:disabled),.word:hover:not(:disabled){transform:translateY(-3px);border-color:var(--cyan)}
+    .picture-card.selected{border:2px solid var(--cyan);background:#16405a;box-shadow:0 0 18px #7ce9ff55}
+    .picture-card.done{border-color:#71e1b4;background:#143b39;opacity:.65}
+    .picture-card:disabled{cursor:default}.glyph{font-size:clamp(27px,3.6vw,47px);line-height:1.2}.card-caption{font-size:12px;font-weight:700}
+    .words{margin-top:10px}.word{min-height:126px;border:1px solid #ff617777;background:#351a2b;color:white;border-radius:9px;font-weight:800;padding:7px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;transition:transform .2s,border-color .2s}.word-art{display:block;width:100%;height:74px;object-fit:contain;border-radius:6px;filter:drop-shadow(0 5px 7px #0008)}
+    .word:disabled{opacity:.4;cursor:default}.word.wrong{animation:shake .4s;border-color:#ff354d}
+    .feedback{min-height:44px;display:flex;align-items:center;color:#d6e9f4;font-weight:700;margin:8px 0 0;line-height:1.4}
+    .overlay{position:fixed;z-index:10;inset:0;display:grid;place-items:center;padding:20px;background:#050a13dd;backdrop-filter:blur(8px)}
+    .modal{width:min(100%,590px);padding:clamp(25px,5vw,48px);border:1px solid #ff758478;border-radius:22px;background:linear-gradient(135deg,#182438,#0b101c);box-shadow:0 0 100px #ff354d3d;text-align:center}
+    .modal h2{font-weight:800;line-height:1.12;margin:12px 0}.modal p{color:#d0ddec;line-height:1.6}
+    .primary{border:0;border-radius:12px;padding:15px 28px;background:#ff354d;color:white;font-weight:800;box-shadow:0 8px 30px #ff354d66;margin-top:14px}
+    .primary:hover{filter:brightness(1.14)}
+    .result-stats{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;margin:22px 0}
+    .result-stats strong{display:block;font-family:'Space Mono',monospace;font-size:25px;color:var(--cyan)}
+    @keyframes float{50%{transform:translateY(-9px)}}@keyframes portal{50%{transform:translate(-50%,-50%) rotate(180deg)}}
+    @keyframes attack{50%{transform:translateX(35px) scale(1.05)}}@keyframes hit{25%{transform:translateX(20px);filter:brightness(3)}65%{transform:translateX(-12px)}}@keyframes taunt{35%{transform:rotate(-7deg) scale(1.07)}70%{transform:rotate(5deg)}}
+    @keyframes shot{0%{opacity:1;transform:translate(0,0) scale(.5)}75%{opacity:1}100%{opacity:0;transform:translate(var(--dx,300px),var(--dy,0px)) scale(1.5)}}
+    @keyframes burst{20%{opacity:1;transform:translate(-50%,-50%) scale(2)}100%{opacity:0;transform:translate(-50%,-50%) scale(5)}}
+    @keyframes shield{25%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.35)}}
+    @keyframes spark{0%{opacity:1}100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(.2)}}
+    @keyframes damage{15%{opacity:1;transform:translate(-50%,-25px) scale(1.2)}100%{opacity:0;transform:translate(-50%,-85px)}}
+    @keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+    @media(max-width:700px){.cards,.words{grid-template-columns:repeat(3,minmax(0,1fr))}.fighter{width:43%}.monster{width:47%}.battlefield{min-height:215px}.picture-card{min-height:73px}.glyph{font-size:29px}.hud{gap:9px}.hp-stat{max-width:none;flex-basis:44%;min-width:130px}.stat strong{font-size:14px}}
+    @media(max-width:370px){.hp-stat{flex-basis:100%}.word{font-size:13px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.577.0/dist/umd/lucide.min.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/570d53629f0b998d.data_sdk.js" type="text/javascript" integrity="sha512-JEN39+V+Nvv9ZZOVS8vNk1iA9ErZJHTdgOw9KzPuMiK7m0I+KPEr/wmTnCFIQVsDjCZgJWfGnFi1IQh2Io2qyA=="></script>
+  <script src="/_sdk/3c889ef0464c8f3c.editing_sdk.js" type="text/javascript" integrity="sha512-NXaPkdInwCOHRcD1AlnM1kHXlU9YrcK/X97HuqeduFmMqNEHYKT8h1O1g4ofohcZaE8pxMTkkESWY0NPm6G8AQ=="></script>
+  <script src="/_sdk/c30df2f1b43bb1c9.resizing_sdk.js" type="text/javascript" integrity="sha512-D333Ts+f4grQi3QxtsDXggpMWmSBzoaq0HBneFnX5mKOM0DIqoMYROhGiQrAeQEiHtxcjverIEa7k6HIZXqXiA=="></script>
+ </head>
+ <body data-template-id="__page-root" class="w-full" style="background: rgb(7, 11, 19);">
+  <main id="arena" class="arena">
+   <div class="frame">
+    <header class="topline">
+     <div>
+      <p data-template-id="mission-label" class="canva-text eyebrow" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">OPD BAHASA MELAYU · TAHUN 2</p>
+      <h1 data-template-id="game-title" class="canva-text title" style="color: rgb(245, 248, 255); font-weight: 800; font-style: normal; font-size: 32px;">BATTLE PADANAN: MISI 1</h1>
+     </div><button id="sound-button" type="button" class="sound" aria-label="Hidupkan bunyi" aria-pressed="false"> <span id="sound-on" data-template-id="sound-on" class="canva-text" hidden="" style="color: rgb(245, 248, 255); font-weight: 700; font-style: normal; font-size: 16px;">♪ Bunyi: Hidup</span> <span id="sound-off" data-template-id="sound-off" class="canva-text" style="color: rgb(245, 248, 255); font-weight: 700; font-style: normal; font-size: 16px;">♪ Bunyi: Mati</span> </button>
+    </header>
+    <section class="hud" aria-label="Status pertempuran">
+     <div class="stat">
+      <span data-template-id="score-label" class="canva-text hud-label" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">SKOR</span><strong id="score">0</strong>
+     </div>
+     <div class="stat">
+      <span data-template-id="lives-label" class="canva-text hud-label" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">NYAWA</span><strong id="lives" aria-live="polite">♥ ♥ ♥</strong>
+     </div>
+     <div class="stat">
+      <span data-template-id="combo-label" class="canva-text hud-label" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">COMBO</span><strong id="combo">0</strong>
+     </div>
+     <div class="stat"><span data-template-id="progress-label" class="canva-text hud-label" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">MISI</span><strong id="progress">0 / 6</strong>
+      <div class="progress-track">
+       <div id="progress-fill" class="progress-fill"></div>
+      </div>
+     </div>
+     <div class="stat hp-stat"><span data-template-id="hero-hp-label" class="canva-text hud-label" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">HP WIRA</span><strong id="hero-hp-number">3 / 3</strong>
+      <div id="hero-hp-track" class="hp-track" role="progressbar" aria-label="HP wira" aria-valuemin="0" aria-valuemax="3" aria-valuenow="3">
+       <div id="hero-hp-fill" class="hero-fill"></div>
+      </div>
+     </div>
+     <div class="stat hp-stat"><span data-template-id="hp-label" class="canva-text hud-label" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">HP RAKSASA</span><strong id="hp-number">600 / 600</strong>
+      <div id="hp-track" class="hp-track" role="progressbar" aria-label="HP raksasa" aria-valuemin="0" aria-valuemax="600" aria-valuenow="600">
+       <div id="hp-fill" class="hp-fill"></div>
+      </div>
+     </div>
+    </section>
+    <section id="battlefield" class="battlefield" aria-label="Arena wira dan raksasa">
+     <div class="portal" aria-hidden="true"></div><img id="hero" data-template-id="hero-image" class="canva-image fighter" loading="lazy" src="canva://MAHY2i91xpk/1" alt="Wira bersut merah dan biru bersedia menyerang">
+     <div id="projectile" class="projectile" aria-hidden="true"></div>
+     <div id="impact" class="impact" aria-hidden="true"></div>
+     <div id="shield" class="shield" aria-hidden="true"></div>
+     <div id="particles" class="particles" aria-hidden="true"></div>
+     <div id="damage" class="damage" aria-hidden="true">
+      −100 HP
+     </div><img id="monster" data-template-id="monster-image" class="canva-image fighter monster" loading="lazy" src="canva://MAHY2t6X8Q4/1" alt="Raksasa berperisai ungu dengan lampu merah">
+    </section>
+    <section data-template-id="play-panel" class="canva-panel play-panel" aria-label="Padanan gambar dan kata kerja" style="background: rgb(16, 29, 45);">
+     <h2 data-template-id="picture-instruction" class="canva-text instruction" style="color: rgb(245, 248, 255); font-weight: 800; font-style: normal; font-size: 24px;">1. Pilih satu gambar</h2>
+     <div class="cards" id="cards"><button type="button" class="picture-card" data-pair="3" aria-label="Gambar bola" aria-pressed="false"><img data-template-id="card-image-3" class="canva-image card-art card-art-bola" loading="lazy" src="canva://MAHY297r5jc/1" alt="Bola sepak di atas padang"><span data-template-id="card-3" class="canva-text card-caption" style="color: rgb(245, 248, 255); font-weight: 700; font-style: normal; font-size: 12px;">Bola</span></button> <button type="button" class="picture-card" data-pair="1" aria-label="Gambar buku" aria-pressed="false"><img data-template-id="card-image-1" class="canva-image card-art" loading="lazy" src="canva://MAHY21FDz6A/1" alt="Buku terbuka dengan ilustrasi"><span data-template-id="card-1" class="canva-text card-caption" style="color: rgb(245, 248, 255); font-weight: 700; font-style: normal; font-size: 12px;">Buku</span></button> <button type="button" class="picture-card" data-pair="4" aria-label="Gambar pokok" aria-pressed="false"><img data-template-id="card-image-4" class="canva-image card-art" loading="lazy" src="canva://MAHY291gwTE/1" alt="Pokok hijau dalam pasu"><span data-template-id="card-4" class="canva-text card-caption" style="color: rgb(245, 248, 255); font-weight: 700; font-style: normal; font-size: 12px;">Pokok</span></button> <button type="button" class="picture-card" data-pair="0" aria-label="Gambar lantai" aria-pressed="false"><img data-template-id="card-image-0" class="canva-image card-art" loading="lazy" src="canva://MAHY25gTGjY/1" alt="Lantai cerah di dalam rumah"><span data-template-id="card-0" class="canva-text card-caption" style="color: rgb(245, 248, 255); font-weight: 700; font-style: normal; font-size: 12px;">Lantai</span></button> <button type="button" class="picture-card" data-pair="5" aria-label="Gambar kek" aria-pressed="false"><img data-template-id="card-image-5" class="canva-image card-art" loading="lazy" src="canva://MAHY2-1Da1o/1" alt="Kek bertingkat dengan strawberi"><span data-template-id="card-5" class="canva-text card-caption" style="color: rgb(245, 248, 255); font-weight: 700; font-style: normal; font-size: 12px;">Kek</span></button> <button type="button" class="picture-card" data-pair="2" aria-label="Gambar gambar" aria-pressed="false"><img data-template-id="card-image-2" class="canva-image card-art card-art-gambar" loading="lazy" src="canva://MAHY2-2CLhA/1" alt="Lukisan kanak-kanak berwarna-warni"><span data-template-id="card-2" class="canva-text card-caption" style="color: rgb(245, 248, 255); font-weight: 700; font-style: normal; font-size: 12px;">Gambar</span></button>
+     </div>
+     <h2 data-template-id="word-instruction" class="canva-text instruction" style="margin: 14px 0px 0px; color: rgb(245, 248, 255); font-weight: 800; font-style: normal; font-size: 24px;">2. Pilih kata kerja yang sepadan</h2>
+     <div class="words" id="words"><button type="button" data-template-id="word-2" class="canva-button word" data-pair="2" style="background: rgb(53, 26, 43); color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;"><span data-template-id="word-label-2" class="canva-text" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;">melukis</span></button> <button type="button" data-template-id="word-5" class="canva-button word" data-pair="5" style="background: rgb(53, 26, 43); color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;"><span data-template-id="word-label-5" class="canva-text" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;">memotong</span></button> <button type="button" data-template-id="word-0" class="canva-button word" data-pair="0" style="background: rgb(53, 26, 43); color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;"><span data-template-id="word-label-0" class="canva-text" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;">menyapu</span></button> <button type="button" data-template-id="word-3" class="canva-button word" data-pair="3" style="background: rgb(53, 26, 43); color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;"><span data-template-id="word-label-3" class="canva-text" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;">menendang</span></button> <button type="button" data-template-id="word-1" class="canva-button word" data-pair="1" style="background: rgb(53, 26, 43); color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;"><span data-template-id="word-label-1" class="canva-text" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;">membaca</span></button> <button type="button" data-template-id="word-4" class="canva-button word" data-pair="4" style="background: rgb(53, 26, 43); color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;"><span data-template-id="word-label-4" class="canva-text" style="color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;">menyiram</span></button>
+     </div>
+     <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+    </section>
+   </div>
+   <section id="start-overlay" class="overlay" aria-labelledby="start-title">
+    <div class="modal">
+     <p data-template-id="start-kicker" class="canva-text eyebrow" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">MISI BERMULA</p>
+     <h2 id="start-title" data-template-id="start-title" class="canva-text title" style="color: rgb(245, 248, 255); font-weight: 800; font-style: normal; font-size: 24px;">BATTLE PADANAN: MISI 1</h2>
+     <p data-template-id="start-description" class="canva-text" style="color: rgb(208, 221, 236); font-weight: 400; font-style: normal; font-size: 16px;">Pilih gambar, kemudian pilih kata kerja yang sepadan. Enam serangan tepat akan menewaskan raksasa!</p><button id="start-button" type="button" data-template-id="start-button" class="canva-button primary" style="background: rgb(255, 53, 77); color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;">Mulakan misi →</button>
+    </div>
+   </section>
+   <section id="end-overlay" class="overlay" aria-labelledby="end-title" hidden="">
+    <div class="modal">
+     <p data-template-id="win-kicker" class="canva-text eyebrow" id="win-kicker" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">MISI BERJAYA!</p>
+     <p data-template-id="lose-kicker" class="canva-text eyebrow" id="lose-kicker" hidden="" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">CUBA LAGI!</p>
+     <h2 id="end-title" data-template-id="win-title" class="canva-text title" style="color: rgb(245, 248, 255); font-weight: 800; font-style: normal; font-size: 24px;">TAHNIAH, WIRA! 🎉</h2>
+     <p data-template-id="win-description" class="canva-text" style="color: rgb(208, 221, 236); font-weight: 700; font-style: normal; font-size: 16px;">ANDA TELAH BERJAYA MENYELESAIKAN MISI 1!</p>
+     <p id="next-message" data-template-id="win-next-message" class="canva-text next-message" style="color: rgb(124, 233, 255); font-weight: 700; font-style: normal; font-size: 16px;">MARI KITA SELESAIKAN MISI SETERUSNYA!</p>
+     <h2 id="lose-title" data-template-id="lose-title" class="canva-text title" hidden="" style="color: rgb(245, 248, 255); font-weight: 800; font-style: normal; font-size: 24px;">Wira perlu bantuan!</h2>
+     <div class="result-stats">
+      <div>
+       <span data-template-id="result-score-label" class="canva-text hud-label" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">SKOR</span><strong id="final-score">0</strong>
+      </div>
+      <div>
+       <span data-template-id="result-correct-label" class="canva-text hud-label" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">BETUL</span><strong id="final-correct">0 / 6</strong>
+      </div>
+      <div>
+       <span data-template-id="result-combo-label" class="canva-text hud-label" style="color: rgb(169, 184, 205); font-weight: 400; font-style: normal; font-size: 11px;">COMBO TERBAIK</span><strong id="final-combo">0</strong>
+      </div>
+     </div><button id="next-button" type="button" data-template-id="next-button" class="canva-button primary next-button" style="background: rgb(22, 165, 199); color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;">MISI SETERUSNYA ➜</button><button id="home-button" type="button" data-template-id="home-button" class="canva-button primary" hidden="" style="background: rgb(255, 53, 77); color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;">Kembali ke permainan</button><button id="replay-button" type="button" data-template-id="replay-button" class="canva-button primary" style="background: rgb(255, 53, 77); color: rgb(255, 255, 255); font-weight: 800; font-style: normal; font-size: 16px;">Main semula ↻</button>
+    </div>
+   </section>
+  </main>
+  <script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const cards = [...document.querySelectorAll('.picture-card')];
+  const words = [...document.querySelectorAll('.word')];
+  const hints = [
+    'Petunjuk tatabahasa: Kata kerja untuk membersihkan lantai dengan penyapu ialah “menyapu”.',
+    'Petunjuk tatabahasa: Kata kerja untuk melihat tulisan dalam buku ialah “membaca”.',
+    'Petunjuk tatabahasa: Kata kerja untuk membahagikan kek ialah “memotong”.',
+    'Petunjuk tatabahasa: Kata kerja untuk menggerakkan bola dengan kaki ialah “menendang”.',
+    'Petunjuk tatabahasa: Kata kerja untuk memberi air kepada pokok ialah “menyiram”.',
+    'Petunjuk tatabahasa: Kata kerja untuk membersihkan gigi dengan berus ialah “menggosok”.'
+  ];
+  let selected = null, completed = new Set(), score = 0, lives = 3, combo = 0, best = 0;
+  let active = false, busy = false, soundOn = false, audioContext = null, musicTimer = null, musicStep = 0;
+  const timers = new Set();
+  function later(fn, delay) {
+    const timer = setTimeout(() => { timers.delete(timer); fn(); }, delay);
+    timers.add(timer);
+  }
+  function tone(freq, duration, type = 'sine', volume = .025, delay = 0, endFreq = freq) {
+    if (!soundOn || !audioContext || audioContext.state !== 'running') return;
+    const now = audioContext.currentTime + delay;
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, now);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(40, endFreq), now + duration);
+    gain.gain.setValueAtTime(.0001, now);
+    gain.gain.linearRampToValueAtTime(volume, now + Math.min(.018, duration / 4));
+    gain.gain.exponentialRampToValueAtTime(.0001, now + duration);
+    osc.connect(gain).connect(audioContext.destination);
+    osc.start(now);
+    osc.stop(now + duration + .02);
+  }
+  async function enableAudio() {
+    try {
+      const Audio = window.AudioContext || window.webkitAudioContext;
+      if (!Audio) {
+        $('feedback').textContent = 'Audio tidak tersedia pada pelayar ini';
+        return false;
+      }
+      audioContext ||= new Audio();
+      await audioContext.resume();
+      return audioContext.state === 'running';
+    } catch (_) {
+      $('feedback').textContent = 'Audio tidak tersedia pada pelayar ini';
+      return false;
+    }
+  }
+  function startMusic() {
+    if (musicTimer) clearInterval(musicTimer);
+    musicStep = 0;
+    musicTimer = setInterval(() => {
+      if (!soundOn || !active || busy || document.hidden) return;
+      const bass = [110, 110, 130.81, 98, 110, 110, 146.83, 98];
+      tone(bass[musicStep % bass.length], .19, 'triangle', .009, 0, bass[musicStep % bass.length] * .86);
+      if (musicStep % 2 === 0) tone(880, .045, 'sine', .004);
+      musicStep++;
+    }, 310);
+  }
+  function sfx(kind) {
+    if (kind === 'laser') {
+      tone(920, .28, 'sawtooth', .034, 0, 155);
+      tone(660, .19, 'triangle', .018, .045, 105);
+    } else if (kind === 'impact') {
+      tone(110, .24, 'sawtooth', .04, 0, 48);
+      tone(430, .13, 'triangle', .025, 0, 90);
+    } else if (kind === 'wrong') {
+      tone(280, .14, 'square', .018, 0, 200);
+      tone(200, .18, 'square', .014, .16, 120);
+    } else if (kind === 'combo') {
+      [392, 523, 659, 784].forEach((f, i) => tone(f, .18, 'triangle', .026, i * .105, f * 1.08));
+    } else if (kind === 'victory') {
+      [392, 523, 659, 784, 1047].forEach((f, i) => tone(f, .32, 'triangle', .027, i * .15, f));
+    }
+  }
+  function update() {
+    $('score').textContent = score;
+    $('lives').textContent = '♥ '.repeat(lives).trim() || '0';
+    $('combo').textContent = combo;
+    $('progress').textContent = `${completed.size} / 6`;
+    $('progress-fill').style.width = `${completed.size / 6 * 100}%`;
+    const hp = 600 - completed.size * 100;
+    $('hp-number').textContent = `${hp} / 600`;
+    $('hp-fill').style.width = `${hp / 600 * 100}%`;
+    $('hp-track').setAttribute('aria-valuenow', hp);
+    $('hero-hp-number').textContent = `${lives} / 3`;
+    $('hero-hp-fill').style.width = `${lives / 3 * 100}%`;
+    $('hero-hp-track').setAttribute('aria-valuenow', lives);
+  }
+  function feedback(message) { $('feedback').textContent = message; }
+  function clearEffects() {
+    $('arena').classList.remove('shake');
+    $('hero').classList.remove('attack', 'hit');
+    $('monster').classList.remove('hit', 'taunt');
+    $('projectile').classList.remove('fire', 'combo');
+    $('impact').classList.remove('burst');
+    $('shield').classList.remove('show');
+    $('damage').classList.remove('show');
+    $('particles').replaceChildren();
+  }
+  function positionEffects() {
+    const field = $('battlefield').getBoundingClientRect();
+    const hero = $('hero').getBoundingClientRect();
+    const monster = $('monster').getBoundingClientRect();
+    const fromX = hero.left + hero.width * .77 - field.left;
+    const fromY = hero.top + hero.height * .44 - field.top;
+    const toX = monster.left + monster.width * .28 - field.left;
+    const toY = monster.top + monster.height * .44 - field.top;
+    const stage = $('battlefield');
+    stage.style.setProperty('--from-x', `${fromX}px`);
+    stage.style.setProperty('--from-y', `${fromY}px`);
+    stage.style.setProperty('--to-x', `${toX}px`);
+    stage.style.setProperty('--to-y', `${toY}px`);
+    stage.style.setProperty('--dx', `${toX - fromX}px`);
+    stage.style.setProperty('--dy', `${toY - fromY}px`);
+  }
+  function sparks() {
+    const layer = $('particles');
+    layer.replaceChildren();
+    for (let i = 0; i < 12; i++) {
+      const dot = document.createElement('span');
+      dot.className = 'particle';
+      const angle = i * Math.PI / 6;
+      const distance = 35 + (i % 3) * 18;
+      dot.style.setProperty('--sx', `${Math.cos(angle) * distance}px`);
+      dot.style.setProperty('--sy', `${Math.sin(angle) * distance}px`);
+      layer.appendChild(dot);
+    }
+  }
+  function reset() {
+    timers.forEach(clearTimeout);
+    timers.clear();
+    clearEffects();
+    selected = null; completed = new Set(); score = 0; lives = 3; combo = 0; best = 0;
+    active = true; busy = false;
+    $('arena').classList.remove('victory');
+    cards.forEach(card => {
+      card.disabled = false;
+      card.classList.remove('selected', 'done');
+      card.setAttribute('aria-pressed', 'false');
+    });
+    words.forEach(word => { word.disabled = false; word.classList.remove('wrong'); });
+    $('end-overlay').hidden = true;
+    $('next-button').hidden = false;
+    $('home-button').hidden = true;
+    $('next-message').textContent = 'MARI KITA SELESAIKAN MISI SETERUSNYA!';
+    $('start-overlay').hidden = true;
+    feedback('Pilih gambar untuk memulakan serangan!');
+    update();
+    if (soundOn) startMusic();
+  }
+  function finish(won) {
+    active = false; busy = false;
+    if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+    if (won) { $('arena').classList.add('victory'); sfx('victory'); }
+    $('win-kicker').hidden = !won;
+    $('end-title').hidden = !won;
+    $('lose-kicker').hidden = won;
+    $('lose-title').hidden = won;
+    $('end-overlay').setAttribute('aria-labelledby', won ? 'end-title' : 'lose-title');
+    $('final-score').textContent = score;
+    $('final-correct').textContent = `${completed.size} / 6`;
+    $('final-combo').textContent = best;
+    $('end-overlay').hidden = false;
+    $('replay-button').focus();
+  }
+  cards.forEach(card => card.addEventListener('click', () => {
+    if (!active || busy || card.disabled) return;
+    cards.forEach(item => {
+      item.classList.remove('selected');
+      item.setAttribute('aria-pressed', 'false');
+    });
+    selected = Number(card.dataset.pair);
+    card.classList.add('selected');
+    card.setAttribute('aria-pressed', 'true');
+    feedback('Sekarang pilih kata kerja yang sesuai dengan gambar.');
+  }));
+  words.forEach(word => word.addEventListener('click', () => {
+    if (!active || busy || word.disabled) return;
+    if (selected === null) { feedback('Pilih satu gambar dahulu.'); return; }
+    const pair = Number(word.dataset.pair);
+    busy = true;
+    positionEffects();
+    if (pair === selected) {
+      completed.add(pair);
+      score += 100;
+      combo++;
+      best = Math.max(best, combo);
+      const special = combo % 3 === 0;
+      const card = cards.find(item => Number(item.dataset.pair) === pair);
+      card.disabled = true;
+      card.classList.remove('selected');
+      card.classList.add('done');
+      card.setAttribute('aria-pressed', 'false');
+      word.disabled = true;
+      selected = null;
+      clearEffects();
+      $('hero').classList.add('attack');
+      $('projectile').classList.toggle('combo', special);
+      void $('projectile').offsetWidth;
+      $('projectile').classList.add('fire');
+      sfx('laser');
+      feedback(special ? 'COMBO KHAS! Tepat! +100 mata. Raksasa menerima 100 kerosakan!' : 'Tepat! +100 mata. Raksasa menerima 100 kerosakan!');
+      later(() => {
+        $('impact').classList.add('burst');
+        $('monster').classList.add('hit');
+        $('arena').classList.add('shake');
+        $('damage').classList.add('show');
+        sparks();
+        update();
+        sfx('impact');
+        if (special) sfx('combo');
+      }, 400);
+      later(() => {
+        clearEffects();
+        if (completed.size === 6) finish(true);
+        else { busy = false; feedback('Hebat! Pilih gambar seterusnya.'); }
+      }, 1350);
+    } else {
+      lives--;
+      combo = 0;
+      update();
+      clearEffects();
+      $('shield').classList.add('show');
+      $('monster').classList.add('taunt');
+      word.classList.add('wrong');
+      sfx('wrong');
+      feedback(`Perisai raksasa menahan serangan! ${hints[selected]}`);
+      later(() => {
+        clearEffects();
+        word.classList.remove('wrong');
+        if (lives <= 0) finish(false);
+        else busy = false;
+      }, 950);
+    }
+  }));
+  $('start-button').addEventListener('click', reset);
+  $('replay-button').addEventListener('click', reset);
+  $('next-button').addEventListener('click', () => {
+    $('next-message').textContent = 'Misi seterusnya sedang menunggu, wira!';
+    $('next-button').hidden = true;
+    $('home-button').hidden = false;
+    $('home-button').focus();
+  });
+  $('home-button').addEventListener('click', reset);
+  $('sound-button').addEventListener('click', async () => {
+    if (!soundOn) {
+      if (!(await enableAudio())) return;
+      soundOn = true;
+      if (active) startMusic();
+    } else {
+      soundOn = false;
+      if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+    }
+    $('sound-on').hidden = !soundOn;
+    $('sound-off').hidden = soundOn;
+    $('sound-button').setAttribute('aria-pressed', String(soundOn));
+    $('sound-button').setAttribute('aria-label', soundOn ? 'Matikan bunyi' : 'Hidupkan bunyi');
+  });
+  update();
+})();
+</script>
+ 
+</body></html>
